@@ -15,7 +15,7 @@ stages:
     - ls
     - (unzip report.zip) || true
     - cd ../
-    - (cp -r backup/public/history/ target/site/allure-maven-plugin) || true
+    - (cp -r backup/public/history/ target/site/allure-maven-plugin/history) || true
 
 variables:
   accepted_rate:
