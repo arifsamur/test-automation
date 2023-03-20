@@ -62,6 +62,7 @@ report:
 
 pages:
   stage: uitest
+  extends: .platform_job
   when: always
   needs:
     - report
