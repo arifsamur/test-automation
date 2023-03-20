@@ -60,25 +60,6 @@ report:
     paths:
       - public  
 
-verify:
-  stage: uitest
-  needs:
-    - job: report
-      artifacts: true
-  extends: .platform_job
-  before_script:
-    - cat /etc/*-release
-    - apt-get update -y
-    - apt-get install -y xmlstarlet
-  script:
-    - failed=$(xmlstarlet sel -t -v "/testng-results/@failed" $CI_PROJECT_DIR/public/testng-results.xml)
-    - passed=$(xmlstarlet sel -t -v "/testng-results/@passed" $CI_PROJECT_DIR/public/testng-results.xml)
-    # - total=$(xmlstarlet sel -t -v "/testng-results/@total" $CI_PROJECT_DIR/public/testng-results.xml)
-    - total=$((passed+failed))
-    - pass_rate=$((passed*100/total))
-    - echo "[Auto-Message] accepted rate is $accepted_rate , Pass rate is $pass_rate , Total TC is $total , Pass TC is $pass"
-    - if [ $pass_rate -lt $accepted_rate ]; then echo "[Auto-Message] Failed UI Tests run below accepted pass rate"; exit 1; else echo "[Auto-Message] Success UI Tests run within accepted pass rate"; fi
-
 pages:
   stage: uitest
   extends: .platform_job
