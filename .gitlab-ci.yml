@@ -60,6 +60,20 @@ report:
     paths:
       - public  
 
+pages:
+  stage: uitest
+  when: always
+  dependencies:
+    - report
+  script:
+    - echo "publish allure report to getlab pages"
+  artifacts:
+    paths:
+      - public
+    expire_in: 30 days
+  only:
+    - master
+
 verify:
   stage: uitest
   needs:
