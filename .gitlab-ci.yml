@@ -10,7 +10,7 @@ stages:
 .download_history: &download_history
   after_script:
     - mkdir backup && cd backup || true
-    - "curl --location --output report.zip --request GET \"https://gitlab.com/api/v4/projects/${CI_PROJECT_ID}/jobs/artifacts/develop/download?job=pages\" --header \"Authorization: Bearer ${CI_DEPLOY_TOKEN}\" || true"
+    - "curl -v --location --output report.zip --request GET \"https://gitlab.com/api/v4/projects/${CI_PROJECT_ID}/jobs/artifacts/develop/download?job=pages\" --header \"Authorization: Bearer ${CI_DEPLOY_TOKEN}\" || true"
     - (unzip report.zip) || true
     - cd ../
     - (cp -r backup/public/history/ target/site/allure-maven-plugin/history) || true
