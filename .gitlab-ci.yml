@@ -43,8 +43,8 @@ tests:
     when: always
     paths:
       - /builds/cx_rnd/cx-platform/test-automation/target/site/allure-maven-plugin/*
-      - testng-results.xml
-      - allure-results
+      - /builds/cx_rnd/cx-platform/test-automation/target/surefire-reports/testng-results.xml
+      - /builds/cx_rnd/cx-platform/test-automation/target/allure-results
     expire_in: 1 week
   only:
     - develop
