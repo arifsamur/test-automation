@@ -37,7 +37,7 @@ tests:
     - mvn clean test -DsuiteXmlFile='testng.xml' -Dheadless=true
     - echo "[Auto-Message] UI Test Cases execution is done"
     - mvn io.qameta.allure:allure-maven:report
-  <<: *download_history
+  # <<: *download_history
   artifacts:
     when: always
     paths:
