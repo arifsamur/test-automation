@@ -32,7 +32,7 @@ tests:
     - cat /etc/*-release
     - java -version
     - mvn -version
-    - apt-get update && apt-get install p7zip-full
+    - apt-get update && apt-get install -y p7zip-full
   script:
     - echo "[Auto-Message] Start UI Test Cases execution"
     - mvn clean test -DsuiteXmlFile='testng.xml' -Dheadless=true
