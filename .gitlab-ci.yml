@@ -8,10 +8,9 @@ stages:
     - platform
 
 .download_history: &download_history
-  # after_script:
-  #  script: 
+  after_script:
     - mkdir backup && cd backup || true
-    - "curl -v --location --output report.zip --request GET \"https://gitlab.com/api/v4/projects/${CI_PROJECT_ID}/jobs/artifacts/develop/download?job=pages\" --header \"Authorization: Bearer ${CI_DEPLOY_TOKEN}\" || true"
+    - curl -v --location --output report.zip --request GET "https://gitlab.com/api/v4/projects/${CI_PROJECT_ID}/jobs/artifacts/develop/download?job=pages&job_token=$CI_JOB_TOKEN" || true
     - pwd
     - ls
     - (7z x report.zip) || true
@@ -39,8 +38,7 @@ tests:
     - mvn clean test -DsuiteXmlFile='testng.xml' -Dheadless=true
     - echo "[Auto-Message] UI Test Cases execution is done"
     - mvn io.qameta.allure:allure-maven:report
-    - *download_history
-  # <<: *download_history
+  <<: *download_history
   artifacts:
     when: always
     paths:
