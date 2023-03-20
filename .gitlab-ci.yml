@@ -13,7 +13,7 @@ stages:
     - "curl -v --location --output report.zip --request GET \"https://gitlab.com/api/v4/projects/${CI_PROJECT_ID}/jobs/artifacts/develop/download?job=pages\" --header \"Authorization: Bearer ${CI_DEPLOY_TOKEN}\" || true"
     - pwd
     - ls
-    - (unzip report.zip) || true
+    - unzip report.zip
     - cd ../
     - (cp -r backup/public/history/ target/site/allure-maven-plugin/history) || true
 
