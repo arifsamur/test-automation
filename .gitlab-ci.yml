@@ -32,6 +32,7 @@ tests:
     - cat /etc/*-release
     - java -version
     - mvn -version
+    - apt-get update && apt-get install unzip
   script:
     - echo "[Auto-Message] Start UI Test Cases execution"
     - mvn clean test -DsuiteXmlFile='testng.xml' -Dheadless=true
