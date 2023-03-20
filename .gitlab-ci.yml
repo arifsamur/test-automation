@@ -60,21 +60,6 @@ report:
     paths:
       - public  
 
-pages:
-  stage: uitest
-  extends: .platform_job
-  when: always
-  needs:
-    - report
-  script:
-    - echo "publish allure report to getlab pages"
-  artifacts:
-    paths:
-      - public
-    expire_in: 30 days
-  only:
-    - master
-
 verify:
   stage: uitest
   needs:
@@ -93,3 +78,18 @@ verify:
     - pass_rate=$((passed*100/total))
     - echo "[Auto-Message] accepted rate is $accepted_rate , Pass rate is $pass_rate , Total TC is $total , Pass TC is $pass"
     - if [ $pass_rate -lt $accepted_rate ]; then echo "[Auto-Message] Failed UI Tests run below accepted pass rate"; exit 1; else echo "[Auto-Message] Success UI Tests run within accepted pass rate"; fi
+
+pages:
+  stage: uitest
+  extends: .platform_job
+  when: always
+  needs:
+    - report
+  script:
+    - echo "publish allure report to getlab pages"
+  artifacts:
+    paths:
+      - public
+    expire_in: 30 days
+  only:
+    - master
