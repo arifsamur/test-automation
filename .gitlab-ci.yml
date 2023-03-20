@@ -9,13 +9,14 @@ stages:
 
 .download_history: &download_history
   # after_script:
-    - mkdir backup && cd backup || true
-    - curl -v --location --output report.zip --request GET "https://gitlab.com/api/v4/projects/${CI_PROJECT_ID}/jobs/artifacts/develop/download?job=pages&job_token=$CI_JOB_TOKEN" || true
-    - pwd
-    - ls
-    - (unzip report.zip) || true
-    - cd ../
-    - (cp -r backup/public/history/* allure-results/history) || true
+  - mkdir backup && cd backup || true
+  - curl -v --location --output report.zip --request GET "https://gitlab.com/api/v4/projects/${CI_PROJECT_ID}/jobs/artifacts/develop/download?job=pages&job_token=$CI_JOB_TOKEN" || true
+  - pwd
+  - ls
+  - (unzip report.zip) || true
+  - cd ../
+  - (cp -r backup/public/history/* allure-results/history) || true
+  - mvn io.qameta.allure:allure-maven:report
 
 variables:
   accepted_rate:
@@ -36,9 +37,8 @@ tests:
     - echo "[Auto-Message] Start UI Test Cases execution"
     - mvn clean test -DsuiteXmlFile='testng.xml' -Dheadless=true
     - echo "[Auto-Message] UI Test Cases execution is done"
-    - *download_history
-    - mvn io.qameta.allure:allure-maven:report
-  # <<: *download_history
+    # - mvn io.qameta.allure:allure-maven:report
+  <<: *download_history
   artifacts:
     when: always
     paths:
