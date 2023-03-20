@@ -13,9 +13,9 @@ stages:
     - curl -v --location --output report.zip --request GET "https://gitlab.com/api/v4/projects/${CI_PROJECT_ID}/jobs/artifacts/develop/download?job=pages&job_token=$CI_JOB_TOKEN" || true
     - pwd
     - ls
-    - (7z x report.zip) || true
+    - (unzip report.zip) || true
     - cd ../
-    - (cp -r backup/public/history/ target/site/allure-maven-plugin/history) || true
+    - (cp -r backup/public/history/ target/site/allure-maven-plugin) || true
 
 variables:
   accepted_rate:
@@ -32,7 +32,6 @@ tests:
     - cat /etc/*-release
     - java -version
     - mvn -version
-    - apt-get update && apt-get install -y p7zip-full
   script:
     - echo "[Auto-Message] Start UI Test Cases execution"
     - mvn clean test -DsuiteXmlFile='testng.xml' -Dheadless=true
