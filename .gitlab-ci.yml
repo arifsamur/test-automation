@@ -61,7 +61,7 @@ report:
       - public  
 
 pages:
-  stage: uitest
+  stage: deploy
   extends: .platform_job
   when: always
   needs:
