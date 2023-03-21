@@ -45,7 +45,7 @@ tests:
     when: always
     paths:
       - public
-      - $CI_PROJECT_DIR/target
+      # - $CI_PROJECT_DIR/target
     expire_in: 1 week
     reports:
       junit:
