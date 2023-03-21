@@ -55,8 +55,7 @@ tests:
 
 Xray_report:
   stage: report
-  dependencies:
-    - tests
+  needs: [tests]
   extends: .platform_job
   script:
     - |
@@ -77,8 +76,7 @@ pages:
   stage: report
   extends: .platform_job
   when: always
-  dependencies:
-    - tests
+  needs: [tests]
   script:
     - echo "publish allure report to gitlab pages"
   artifacts:
@@ -90,8 +88,7 @@ pages:
 
 verify:
   stage: verify
-  dependencies:
-    - tests
+  needs: [tests]
   extends: .platform_job
   before_script:
     - apt-get update -y && apt-get install -y xmlstarlet
