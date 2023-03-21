@@ -47,6 +47,9 @@ tests:
       - public
       - $CI_PROJECT_DIR/target
     expire_in: 1 week
+    reports:
+      junit:
+        - $CI_PROJECT_DIR/target/surefire-reports/junitreports/TEST-*.xml
   only:
     - develop
 
