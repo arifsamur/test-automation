@@ -15,7 +15,7 @@ stages:
     - ls
     - (unzip report.zip) || true
     - cd ../
-    - (cp -r backup/public/history/* allure-results/history) || true
+    - (cp -r backup/public/history/* $CI_PROJECT_DIR/target/allure-results/history) || true
 
 variables:
   accepted_rate:
