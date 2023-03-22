@@ -32,13 +32,14 @@ variables:
 tests:
   stage: test
   extends: .platform_job
+  parallel: 2
   before_script:
     - cat /etc/*-release
     - java -version
     - mvn -version
   script:
     - echo "[Auto-Message] Start UI Test Cases execution"
-    - mvn clean test -DsuiteXmlFile='testng.xml' -Dheadless=true
+    - mvn clean test -DsuiteXmlFile='src/test/resources/testng_suite_${CI_NODE_INDEX}.xml' -Dheadless=true
     - echo "[Auto-Message] UI Test Cases execution is done"
   <<: *generate_allure_report
   artifacts:
