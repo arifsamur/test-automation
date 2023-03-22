@@ -41,7 +41,7 @@ tests:
     - echo "[Auto-Message] Start UI Test Cases execution"
     - echo $CI_NODE_INDEX
     - echo $CI_NODE_TOTAL
-    - mvn $accepted_rate clean test -DsuiteXmlFile=src/test/resources/testng_suite_$CI_NODE_INDEX.xml -Dheadless=true
+    - mv $accepted_rate clean test -DsuiteXmlFile=src/test/resources/testng_suite_$CI_NODE_INDEX.xml -Dheadless=true
     - echo "[Auto-Message] UI Test Cases execution is done"
   <<: *generate_allure_report
   artifacts:
