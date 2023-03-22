@@ -10,7 +10,6 @@
     <test verbose="2" preserve-order="true"
           name="C:/CX/Candidates/CXP-Test-Automation/src/test/java/platform/kpi/KpiTest.java">
         <classes>
-            <class name="platform.kpi.KpiTest"/>
             <class name="platform.kpi.mockTest"/>
         </classes>
     </test>
