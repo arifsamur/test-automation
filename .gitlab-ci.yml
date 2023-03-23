@@ -11,6 +11,9 @@ variables:
     description: "Accepted pass rate"
   testExecKey:
     description: "XRAY Test Execution Ticket ID"
+  MAVEN_OPTS: "-Dmaven.repo.local=.m2/repository"
+  MAVEN_CLI_OPTS: "--batch-mode --errors --fail-at-end --show-version -DinstallAtEnd=true -DdeployAtEnd=true"
+  TESTNG_SUITE: "src/test/resources/testng"
 
 .platform_job:
   tags:
@@ -35,6 +38,11 @@ variables:
     - mv $CI_PROJECT_DIR/target/site/allure-maven-plugin/* public
     - mv $CI_PROJECT_DIR/target/surefire-reports/testng-results.xml public
 
+cache:
+  key: "${CI_COMMIT_REF_SLUG}"
+  paths:
+    - .m2/repository
+
 tests:
   stage: test
   extends: .platform_job
@@ -46,7 +54,8 @@ tests:
   artifacts:
     when: always
     paths:
-      - public
+      - target/surefire-reports
+      - target/allure-results
     expire_in: 1 week
     reports:
       junit:
@@ -61,8 +70,8 @@ merge_test_results:
   script:
     - 'echo "Merging test results..."'
     - mkdir merged-test-results
-    - cp */public/*.xml merged-test-results
-    - cp */public/allure-results/* merged-test-results
+    - cp */target/surefire-reports/*.xml merged-test-results
+    - cp */target/allure-results/* merged-test-results
   artifacts:
     paths:
       - merged-test-results
