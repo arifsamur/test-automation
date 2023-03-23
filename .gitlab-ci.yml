@@ -69,6 +69,8 @@ merge_test_results:
   needs: [tests]
   script:
     - 'echo "Merging test results..."'
+    - pwd
+    - ls -a
     - mkdir merged-test-results
     - cp */target/surefire-reports/*.xml merged-test-results
     - cp */target/allure-results/* merged-test-results
