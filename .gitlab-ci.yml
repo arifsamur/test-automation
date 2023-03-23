@@ -71,7 +71,7 @@ merge_test_results:
     - 'echo "Merging test results..."'
     - pwd
     - ls -a
-    - cd /target
+    - cd target/
     - ls
     - mkdir merged-test-results
     - cp */target/surefire-reports/*.xml merged-test-results
@@ -98,7 +98,7 @@ Xray_report:
     when: always
     expire_in: 1 week
     paths:
-      - publi
+      - public
   only:
     - develop
 
