@@ -35,8 +35,9 @@ variables:
 
 .collect_reports: &collect_reports
     - mkdir public
-    - mv $CI_PROJECT_DIR/target/site/allure-maven-plugin/* public
-    - mv $CI_PROJECT_DIR/target/surefire-reports/testng-results.xml public
+    - cp target/surefire-reports/testng-results.xml public/testng-results_suite_$CI_NODE_INDEX.xml
+    # - mv $CI_PROJECT_DIR/target/site/allure-maven-plugin/* public
+    # - mv $CI_PROJECT_DIR/target/surefire-reports/testng-results.xml public
 
 cache:
   key: "${CI_COMMIT_REF_SLUG}"
@@ -56,6 +57,7 @@ tests:
     paths:
       - target/surefire-reports
       - target/allure-results
+      - public
     expire_in: 1 week
     reports:
       junit:
@@ -76,6 +78,7 @@ merge_test_results:
     - ls
     - cd ..
     - find . -path "*/target/surefire-reports/*.xml" -exec cp {} merged-test-results \;
+    - find . -path "*/target/allure-results/*" -exec cp {} merged-test-results \;
     # - cp */target/surefire-reports/*.xml merged-test-results
     # - cp */target/allure-results/* merged-test-results
   artifacts:
