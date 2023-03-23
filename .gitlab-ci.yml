@@ -74,10 +74,11 @@ merge_test_results:
     - cd target/
     - ls
     - mkdir merged-test-results
-    - cp */target/surefire-reports/*.xml merged-test-results
-    - cp */target/allure-results/* merged-test-results
+    # - cp */target/surefire-reports/*.xml merged-test-results
+    # - cp */target/allure-results/* merged-test-results
   artifacts:
     paths:
+      - target
       - merged-test-results
   when: always
 
