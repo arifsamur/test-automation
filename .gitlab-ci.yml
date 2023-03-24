@@ -43,12 +43,12 @@ cache:
   paths:
     - .m2/repository
 
+
+
 tests:
   stage: test
   extends: .platform_job
   parallel: 2
-  before_script:
-    - apt-get update -y && apt-get install -y xmlstarlet
   script:
     - *test_definition
   after_script:
@@ -69,6 +69,8 @@ merge_test_results:
   stage: report
   extends: .platform_job
   needs: [tests]
+  before_script:
+    - apt-get update -y && apt-get install -y xmlstarlet  
   script:
     - 'echo "Merging test results..."'
     - xmlstarlet merge --merge-strategy merge public/testng-results_*.xml -o public/testng-results.xml
@@ -84,7 +86,7 @@ merge_test_results:
 
 Xray_report:
   stage: report
-  needs: [tests]
+  needs: [merge_test_results]
   extends: .platform_job
   script:
     - |
@@ -107,7 +109,7 @@ pages:
   stage: report
   extends: .platform_job
   when: always
-  needs: [tests]
+  needs: [merge_test_results]
   script:
     - echo "publish allure report to gitlab pages"
   artifacts:
@@ -119,8 +121,10 @@ pages:
 
 verify:
   stage: verify
-  needs: [tests]
+  needs: [merge_test_results]
   extends: .platform_job
+  before_script:
+   - apt-get update -y && apt-get install -y xmlstarlet
   script:
     - failed=$(xmlstarlet sel -t -v "/testng-results/@failed" $CI_PROJECT_DIR/public/testng-results.xml)
     - passed=$(xmlstarlet sel -t -v "/testng-results/@passed" $CI_PROJECT_DIR/public/testng-results.xml)
