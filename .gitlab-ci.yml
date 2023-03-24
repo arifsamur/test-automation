@@ -5,6 +5,16 @@ stages:
   - report
   - verify
 
+variables:
+  accepted_rate:
+    value: "95"
+    description: "Accepted pass rate"
+  testExecKey:
+    description: "XRAY Test Execution Ticket ID"
+  MAVEN_OPTS: "-Dmaven.repo.local=.m2/repository"
+  MAVEN_CLI_OPTS: "--batch-mode --errors --fail-at-end --show-version -DinstallAtEnd=true -DdeployAtEnd=true"
+  TESTNG_SUITE: "src/test/resources/testng"
+
 .platform_job:
   tags:
     - platform
@@ -15,38 +25,37 @@ stages:
     - curl -v --location --output report.zip --request GET "https://gitlab.com/api/v4/projects/${CI_PROJECT_ID}/jobs/artifacts/develop/download?job=pages&job_token=$CI_JOB_TOKEN" || true
     - (unzip report.zip) || true
     - cd ../
-    - (cp -r backup/public/history/ $CI_PROJECT_DIR/target/allure-results/history) || true
-    - mvn io.qameta.allure:allure-maven:report
-    - mkdir public
-    - mv $CI_PROJECT_DIR/target/site/allure-maven-plugin/* public
-    - mv $CI_PROJECT_DIR/target/surefire-reports/testng-results.xml public
+    - (cp -r backup/public/history/ public/allure-results/history) || true
 
-variables:
-  accepted_rate:
-    value: "95"
-    description: "Accepted pass rate"
+.test_definition: &test_definition
+  - echo "[Auto-Message] Start UI Test Cases execution"
+  - mvn clean test -DsuiteXmlFile=src/test/resources/testng_suite_$CI_NODE_INDEX.xml -Dheadless=true
+  - echo "[Auto-Message] UI Test Cases execution is done"
 
-  testExecKey:
-    description: "XRAY Test Execution Ticket ID"
+
+.collect_reports: &collect_reports
+  - mkdir public
+  - cp target/surefire-reports/testng-results.xml public/testng-results_suite_$CI_NODE_INDEX.xml
+  - cp target/allure-results public
+
+cache:
+  key: "${CI_COMMIT_REF_SLUG}"
+  paths:
+    - .m2/repository
 
 tests:
   stage: test
   extends: .platform_job
   parallel: 2
-  before_script:
-    - cat /etc/*-release
-    - java -version
-    - mvn -version
   script:
-    - echo "[Auto-Message] Start UI Test Cases execution"
-    - mvn clean test -DsuiteXmlFile='src/test/resources/testng_suite_${CI_NODE_INDEX}.xml' -Dheadless=true
-    - echo "[Auto-Message] UI Test Cases execution is done"
-  <<: *generate_allure_report
+    - *test_definition
+  after_script:
+    - *collect_reports
   artifacts:
     when: always
     paths:
+      - target/surefire-reports
       - public
-      # - $CI_PROJECT_DIR/target
     expire_in: 1 week
     reports:
       junit:
@@ -54,32 +63,54 @@ tests:
   only:
     - develop
 
+# merge_test_results:
+#   stage: report
+#   extends: .platform_job
+#   needs: [tests]
+#   script:
+#     - 'echo "Merging test results..."'
+#     - mkdir merged-test-results
+#     - pwd
+#     - ls -a
+#     - cd target/
+#     - ls
+#     - cd ..
+#     - find . -path "*/target/surefire-reports/*.xml" -exec cp {} merged-test-results \;
+#     - find . -path "*/target/allure-results/*" -exec cp {} merged-test-results \;
+#     # - cp */target/surefire-reports/*.xml merged-test-results
+#     # - cp */target/allure-results/* merged-test-results
+#   artifacts:
+#     paths:
+#       - target
+#       - merged-test-results
+#   when: always
+
 Xray_report:
   stage: report
-  dependencies:
-    - tests
+  needs: [tests]
   extends: .platform_job
   script:
     - |
-        if [ -n "$testExecKey" ]; then
-          echo "[Auto-Message] Upload test result to Xray..."
-          export token=$(curl -H "Content-Type: application/json" -X POST --data "{ \"client_id\": \"$client_id\",\"client_secret\": \"$client_secret\" }" https://xray.cloud.getxray.app/api/v2/authenticate| tr -d '"')
-          echo $token
-          curl -v -H "Content-Type: text/xml" -X POST -H "Authorization: Bearer $token" --data @"$CI_PROJECT_DIR/public/testng-results.xml" "https://xray.cloud.getxray.app/api/v2/import/execution/testng?projectKey=PLATFORM&testExecKey=$testExecKey"
-          echo "[Auto-Message] Upload test resul is done"
-        fi
+      if [ -n "$testExecKey" ]; then
+        echo "[Auto-Message] Upload test result to Xray..."
+        export token=$(curl -H "Content-Type: application/json" -X POST --data "{ \"client_id\": \"$client_id\",\"client_secret\": \"$client_secret\" }" https://xray.cloud.getxray.app/api/v2/authenticate| tr -d '"')
+        echo $token
+        curl -v -H "Content-Type: text/xml" -X POST -H "Authorization: Bearer $token" --data @"$CI_PROJECT_DIR/public/testng-results_*.xml" "https://xray.cloud.getxray.app/api/v2/import/execution/testng?projectKey=PLATFORM&testExecKey=$testExecKey"
+        echo "[Auto-Message] Upload test resul is done"
+      fi
   artifacts:
     when: always
     expire_in: 1 week
     paths:
-      - publi
+      - public
+  only:
+    - develop
 
 pages:
   stage: report
   extends: .platform_job
   when: always
-  dependencies:
-    - tests
+  needs: [merge_test_results]
   script:
     - echo "publish allure report to gitlab pages"
   artifacts:
@@ -91,8 +122,7 @@ pages:
 
 verify:
   stage: verify
-  dependencies:
-    - tests
+  needs: [merge_test_results]
   extends: .platform_job
   before_script:
     - apt-get update -y && apt-get install -y xmlstarlet
@@ -104,3 +134,5 @@ verify:
     - pass_rate=$((passed*100/total))
     - echo "[Auto-Message] accepted rate is $accepted_rate , Pass rate is $pass_rate , Total TC is $total , Pass TC is $pass"
     - if [ $pass_rate -lt $accepted_rate ]; then echo "[Auto-Message] Failed UI Tests run below accepted pass rate"; exit 1; else echo "[Auto-Message] Success UI Tests run within accepted pass rate"; fi
+  only:
+    - develop
