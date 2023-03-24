@@ -110,7 +110,7 @@ pages:
   stage: report
   extends: .platform_job
   when: always
-  needs: [merge_test_results]
+  needs: [tests]
   script:
     - echo "publish allure report to gitlab pages"
   artifacts:
@@ -122,7 +122,7 @@ pages:
 
 verify:
   stage: verify
-  needs: [merge_test_results]
+  needs: [tests]
   extends: .platform_job
   before_script:
     - apt-get update -y && apt-get install -y xmlstarlet
