@@ -77,6 +77,7 @@ merge_test_results:
     - ls
     - pwd
     - chmod +x src/test/resources/merge_testng_results.sh
+    - cd public/
     - src/test/resources/merge_testng_results.sh
 
     # - find . -path "*/target/surefire-reports/*.xml" -exec cp {} merged-test-results \;
