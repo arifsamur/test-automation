@@ -78,7 +78,7 @@ merge_test_results:
     - pwd
     - chmod +x src/test/resources/merge_testng_results.sh
     - cd public/
-    - src/test/resources/merge_testng_results.sh
+    - ${CI_PROJECT_ID}/src/test/resources/merge_testng_results.sh
 
     # - find . -path "*/target/surefire-reports/*.xml" -exec cp {} merged-test-results \;
     # - find . -path "*/target/allure-results/*" -exec cp {} merged-test-results \;
