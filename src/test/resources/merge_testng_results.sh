@@ -1,7 +1,7 @@
 #!/bin/bash
 
 input_directory="$1"
-output_file="${input_directory}/testng-results.xml"
+output_file="testng-results.xml"
 
 # Initialize the variables for the root data
 ignored=0
@@ -9,11 +9,11 @@ total=0
 passed=0
 failed=0
 skipped=0
-
+echo 'Create the merged output file with the XML declaration'
 # Create the merged output file with the XML declaration
 echo '<?xml version="1.0" encoding="UTF-8"?>' > $output_file
 echo '<testng-results>' >> $output_file
-
+echo 'End the merged output file with the XML declaration'
 # Find and process each input file
 while IFS= read -r file; do
     # Accumulate the root data values
