@@ -10,6 +10,7 @@ passed=0
 failed=0
 skipped=0
 echo 'Create the merged output file with the XML declaration'
+pwd
 # Create the merged output file with the XML declaration
 echo '<?xml version="1.0" encoding="UTF-8"?>' > $output_file
 echo '<testng-results>' >> $output_file
