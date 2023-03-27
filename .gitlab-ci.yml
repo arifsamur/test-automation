@@ -76,7 +76,9 @@ merge_test_results:
     - ls
     - pwd
     - cd $CI_PROJECT_DIR/src/test/resources/
-    - chmod +x $CI_PROJECT_DIR/src/test/resources/merge-testng-results.sh
+    - ls
+    - pwd
+    - chmod +x merge-testng-results.sh
     - $CI_PROJECT_DIR/src/test/resources/merge-testng-results.sh
 
     # - find . -path "*/target/surefire-reports/*.xml" -exec cp {} merged-test-results \;
