@@ -85,9 +85,10 @@ merge_test_results:
     # # - cp */target/surefire-reports/*.xml merged-test-results
     # - cp */target/allure-results/* merged-test-results
   artifacts:
+    expire_in: 1 week
     paths:
       - public
-  when: always
+    when: always
 
 Xray_report:
   stage: report
@@ -113,11 +114,12 @@ Xray_report:
 pages:
   stage: report
   extends: .platform_job
-  when: always
+
   needs: [merge_test_results]
   script:
     - echo "publish allure report to gitlab pages"
   artifacts:
+    when: always
     paths:
       - public
     expire_in: 30 days
