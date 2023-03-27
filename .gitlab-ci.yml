@@ -73,8 +73,10 @@ merge_test_results:
     - apt-get update -y && apt-get install -y xmlstarlet  
   script:
     - 'echo "Merging test results..."'
-    - chmod +x src/test/resources/merge-testng-results.sh
-    - src/test/resources/merge-testng-results.sh
+    - ls
+    - pwd
+    - chmod +x $CI_PROJECT_DIR/src/test/resources/merge-testng-results.sh
+    - $CI_PROJECT_DIR/src/test/resources/merge-testng-results.sh
 
     # - find . -path "*/target/surefire-reports/*.xml" -exec cp {} merged-test-results \;
     # - find . -path "*/target/allure-results/*" -exec cp {} merged-test-results \;
