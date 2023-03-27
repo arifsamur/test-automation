@@ -1,7 +1,8 @@
 #!/bin/bash
 
-input_files="testng_result_*.xml"
-output_file="testng-results.xml"
+input_directory="$1"
+input_files="${input_directory}/testng_result_*.xml"
+output_file="${input_directory}/testng-results.xml"
 
 # Initialize the variables for the root data
 ignored=0
