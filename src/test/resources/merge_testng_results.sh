@@ -1,5 +1,11 @@
 #!/bin/bash
 
+total_ignored=0
+total_total=0
+total_passed=0
+total_failed=0
+total_skipped=0
+
 # Create a new XML file with the root element
 echo '<?xml version="1.0" encoding="UTF-8"?><testng-results><suite>' > merged-results.xml
 
@@ -9,6 +15,19 @@ for file in testng-results_*.xml; do
   if [[ -f "$file" && "$file" == *.xml ]]; then
     # Extract the <test> elements from each file and append them to the merged-results.xml file
     xmlstarlet sel -t -m '//test' -c . -n "$file" >> merged-results.xml
+ # Extract the attributes from each file and update the attribute variables
+    ignored=$(xmlstarlet sel -t -v '/testng-results/@ignored' "$file")
+    total=$(xmlstarlet sel -t -v '/testng-results/@total' "$file")
+    passed=$(xmlstarlet sel -t -v '/testng-results/@passed' "$file")
+    failed=$(xmlstarlet sel -t -v '/testng-results/@failed' "$file")
+    skipped=$(xmlstarlet sel -t -v '/testng-results/@skipped' "$file")
+
+    total_ignored=$((total_ignored + ignored))
+    total_total=$((total_total + total))
+    total_passed=$((total_passed + passed))
+    total_failed=$((total_failed + failed))
+    total_skipped=$((total_skipped + skipped))
+
   fi
 done
 
