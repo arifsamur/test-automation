@@ -1,11 +1,5 @@
 #!/bin/bash
 
-total_ignored=0
-total_total=0
-total_passed=0
-total_failed=0
-total_skipped=0
-
 # Create a new XML file with the root element
 echo '<?xml version="1.0" encoding="UTF-8"?><testng-results><suite>' > merged-results.xml
 
