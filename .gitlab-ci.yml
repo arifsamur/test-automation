@@ -43,8 +43,6 @@ cache:
   paths:
     - .m2/repository
 
-
-
 tests:
   stage: test
   extends: .platform_job
@@ -78,7 +76,6 @@ merge_test_results:
     - chmod +x src/test/resources/merge_testng_results.sh
     - cd public/
     - $CI_PROJECT_DIR/src/test/resources/merge_testng_results.sh
-
     # - find . -path "*/target/surefire-reports/*.xml" -exec cp {} merged-test-results \;
     # - find . -path "*/target/allure-results/*" -exec cp {} merged-test-results \;
   artifacts:
@@ -105,8 +102,6 @@ Xray_report:
     expire_in: 1 week
     paths:
       - public
-  only:
-    - develop
 
 pages:
   stage: report
