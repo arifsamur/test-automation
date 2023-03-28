@@ -91,7 +91,7 @@ Xray_report:
       echo "[Auto-Message] Upload test result to Xray..."
       export token=$(curl -H "Content-Type: application/json" -X POST --data "{ \"client_id\": \"$client_id\",\"client_secret\": \"$client_secret\" }" https://xray.cloud.getxray.app/api/v2/authenticate| tr -d '"')
       echo $token
-      curl -v -H "Content-Type: text/xml" -X POST -H "Authorization: Bearer $token" --data @"$CI_PROJECT_DIR/public/testng-results.xml" "https://xray.cloud.getxray.app/api/v2/import/execution/testng?projectKey=PLATFORM&testExecKey=$testExecKey"
+      curl -v -H "Content-Type: text/xml" -X POST -H "Authorization: Bearer $token" --data @"$CI_PROJECT_DIR/public/merge_testng_results.xml" "https://xray.cloud.getxray.app/api/v2/import/execution/testng?projectKey=PLATFORM&testExecKey=$testExecKey"
       echo "[Auto-Message] Upload test resul is done"
   rules:
     - if: '$testExecKey && $testExecKey != ""'
