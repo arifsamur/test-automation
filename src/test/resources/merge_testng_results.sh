@@ -24,7 +24,12 @@ for file in testng-results_*.xml; do
 
   fi
 done
-
 # Close the root element
 echo '</suite></testng-results>' >> merged-results.xml
+
+echo "TOTAL_IGNORED=$total_ignored" > results.env
+echo "TOTAL_TOTAL=$total_total" >> results.env
+echo "TOTAL_PASSED=$total_passed" >> results.env
+echo "TOTAL_FAILED=$total_failed" >> results.env
+echo "TOTAL_SKIPPED=$total_skipped" >> results.env
 
