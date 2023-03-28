@@ -14,6 +14,12 @@ variables:
   MAVEN_OPTS: "-Dmaven.repo.local=.m2/repository"
   MAVEN_CLI_OPTS: "--batch-mode --errors --fail-at-end --show-version -DinstallAtEnd=true -DdeployAtEnd=true"
   TESTNG_SUITE: "src/test/resources/testng"
+  total_ignored: 0
+  total_passed: 0
+  total_failed: 0
+  total_total: 0
+  total_skipped: 0
+
 
 .platform_job:
   tags:
@@ -76,8 +82,6 @@ merge_test_results:
     - chmod +x src/test/resources/merge_testng_results.sh
     - cd public/
     - $CI_PROJECT_DIR/src/test/resources/merge_testng_results.sh
-    # - find . -path "*/target/surefire-reports/*.xml" -exec cp {} merged-test-results \;
-    # - find . -path "*/target/allure-results/*" -exec cp {} merged-test-results \;
   artifacts:
     expire_in: 1 week
     paths:
