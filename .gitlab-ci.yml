@@ -80,7 +80,7 @@ merge_test_results:
       - public
     when: always
     reports:
-      dotenv: results.env
+      dotenv: public/results.env
 
 Xray_report:
   stage: report
