@@ -14,3 +14,4 @@ done
 
 # Close the root element
 echo '</suite>' >> merged-results.xml
+echo '</testng-results>' >> merged-results.xml
