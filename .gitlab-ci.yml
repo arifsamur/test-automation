@@ -122,7 +122,7 @@ verify:
   extends: .platform_job
   script:
     - total=$((TOTAL_PASSED+TOTAL_FAILED))
-    - pass_rate=$((total_passed*100/total))
+    - pass_rate=$((TOTAL_PASSED*100/total))
     - echo "[Auto-Message] accepted rate is $accepted_rate , Pass rate is $pass_rate , Total TC is $total , Pass TC is $pass"
     - if [ $pass_rate -lt $accepted_rate ]; then echo "[Auto-Message] Failed UI Tests run below accepted pass rate"; exit 1; else echo "[Auto-Message] Success UI Tests run within accepted pass rate"; fi
   only:
