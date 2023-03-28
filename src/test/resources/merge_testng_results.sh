@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Create a new XML file with the root element
-echo '<?xml version="1.0" encoding="UTF-8"?><suite>' > merged-results.xml
+echo '<?xml version="1.0" encoding="UTF-8"?><testng-results><suite>' > merged-results.xml
 
 # Loop through all testng-results_*.xml files in the current directory
 for file in testng-results_*.xml; do
@@ -13,5 +13,5 @@ for file in testng-results_*.xml; do
 done
 
 # Close the root element
-echo '</suite>' >> merged-results.xml
-echo '</testng-results>' >> merged-results.xml
+echo '</suite></testng-results>' >> merged-results.xml
+
