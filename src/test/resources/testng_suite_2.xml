@@ -7,8 +7,7 @@
     <listeners>
         <listener class-name="app.getxray.xray.testng.listeners.XrayListener" />
     </listeners>
-    <test verbose="2" preserve-order="true"
-          name="C:/CX/Candidates/CXP-Test-Automation/src/test/java/platform/kpi/KpiTest.java">
+    <test verbose="2" preserve-order="true" name="mockTest">
         <classes>
             <class name="platform.kpi.mockTest"/>
         </classes>
