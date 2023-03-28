@@ -18,8 +18,8 @@ for file in testng-results_*.xml; do
 
     total_ignored=$((total_ignored + ignored))
     total_total=$((total_total + total))
-    total_passed=$((total_passed + passed))
-    total_failed=$((total_failed + failed))
+    export total_passed=$((total_passed + passed))
+    export total_failed=$((total_failed + failed))
     total_skipped=$((total_skipped + skipped))
 
   fi
