@@ -17,8 +17,7 @@ for file in testng-results_*.xml; do
     total_passed=$((total_passed + passed))
     total_failed=$((total_failed + failed))
     total_skipped=$((total_skipped + skipped))
-
-  fi
+fi
 done
 
 first_file=$(find . -name "testng-results_*.xml" | head -n 1)
