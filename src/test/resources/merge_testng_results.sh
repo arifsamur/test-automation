@@ -27,7 +27,6 @@ done
 
 xmlstarlet ed -L -u '/suite' -v "" -a '/suite' -t attr -n 'ignored' -v "$total_ignored" -a '/suite' -t attr -n 'total' -v "$total_total" -a '/suite' -t attr -n 'passed' -v "$total_passed" -a '/suite' -t attr -n 'failed' -v "$total_failed" -a '/suite' -t attr -n 'skipped' -v "$total_skipped" merged-results.xml
 
-
 # Close the root element
 echo '</suite></testng-results>' >> merged-results.xml
 
