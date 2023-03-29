@@ -31,11 +31,12 @@ for file in $(echo "$files_list" | tail -n +2); do
   if [[ -f "$file" && "$file" == *.xml ]]; then
     # Extract the <test> elements from each file
     tests_to_insert=$(xmlstarlet sel -t -m '//test' -c . -n "$file")
-    echo $tests_to_insert
+    echo $tests_to_insert 
+    echo $tests_to_insert >> merged-results.xml
     # Insert the <test> elements after the last <test> element in the merged-results.xml file
-    xmlstarlet ed -L -s "//suite" -t elem -n "temp" -v "$tests_to_insert" merged-results.xml
-    xmlstarlet fo -t merged-results.xml
-    # xmlstarlet ed -L -m "//test" "//suite" merged-results.xml
+    # xmlstarlet ed -L -s "//suite" -t elem -n "temp" -v "$tests_to_insert" merged-results.xml
+    # xmlstarlet fo -t merged-results.xml
+    xmlstarlet ed -L -m "//test" "//suite" merged-results.xml
     # xmlstarlet ed -L -d "//temp" merged-results.xml
 
     # Extract the attribute values from each file and add them to the totals
