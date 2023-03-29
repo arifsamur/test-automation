@@ -30,13 +30,15 @@ fi
 for file in $(find . -name "testng-results_*.xml" | tail -n +2); do
   # Check if the file exists and is an XML file
   if [[ -f "$file" && "$file" == *.xml ]]; then
-    # Extract the <test> elements from each file and append them to the merged-results.xml file
-    xmlstarlet sel -t -m '//test' -c . -n "$file" >> merged-results.xml
+    # Extract the <test> elements from each file
+    tests_to_insert=$(xmlstarlet sel -t -m '//test' -c . -n "$file")
+    # Insert the <test> elements after the last <test> element in the merged-results.xml file
+    xmlstarlet ed -L -a "//testng-results/test[last()]" -t xml -v "$tests_to_insert" merged-results.xml
   fi
 done
 
 # Close the root element
-echo '</suite></testng-results>' >> merged-results.xml
+# echo '</suite></testng-results>' >> merged-results.xml
 
 echo "TOTAL_IGNORED=$total_ignored" > results.env
 echo "TOTAL_TOTAL=$total_total" >> results.env
