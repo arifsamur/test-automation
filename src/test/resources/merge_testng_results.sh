@@ -25,7 +25,7 @@ if [ -n "$first_file" ]; then
   total_skipped=$((total_skipped + $(xmlstarlet sel -t -v "//testng-results/@skipped" "$first_file")))
 fi
 
-# Loop through all testng-results_*.xml files except the first one
+echo 'Loop through all testng-results_*.xml files except the first one'
 for file in $(echo "$files_list" | tail -n +2); do
   # Check if the file exists and is an XML file
   if [[ -f "$file" && "$file" == *.xml ]]; then
