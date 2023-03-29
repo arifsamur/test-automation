@@ -1,57 +1,34 @@
 #!/bin/bash
 
-# Initialize variables for attribute totals
-total_ignored=0
-total_total=0
-total_passed=0
-total_failed=0
-total_skipped=0
+# Create a new XML file with the root element
+echo '<?xml version="1.0" encoding="UTF-8"?><testng-results><suite>' > merged-results.xml
 
-# Get the list of testng-results_*.xml files
-files_list=$(find . -name "testng-results_*.xml")
-
-# Get the first file from the list
-first_file=$(echo "$files_list" | head -n 1)
-
-# If a first file is found, copy it to merged-results.xml
-if [ -n "$first_file" ]; then
-  cp "$first_file" merged-results.xml
-
-  # Extract the attribute values from the first file and add them to the totals
-  total_ignored=$((total_ignored + $(xmlstarlet sel -t -v "//testng-results/@ignored" "$first_file")))
-  total_total=$((total_total + $(xmlstarlet sel -t -v "//testng-results/@total" "$first_file")))
-  total_passed=$((total_passed + $(xmlstarlet sel -t -v "//testng-results/@passed" "$first_file")))
-  total_failed=$((total_failed + $(xmlstarlet sel -t -v "//testng-results/@failed" "$first_file")))
-  total_skipped=$((total_skipped + $(xmlstarlet sel -t -v "//testng-results/@skipped" "$first_file")))
-fi
-
-echo "Loop through all testng-results_*.xml files except the first one"
-for file in $(echo "$files_list" | tail -n +2); do
+# Loop through all testng-results_*.xml files in the current directory
+for file in testng-results_*.xml; do
   # Check if the file exists and is an XML file
   if [[ -f "$file" && "$file" == *.xml ]]; then
-    # Extract the <test> elements from each file
-    tests_to_insert=$(xmlstarlet sel -t -m '//test' -c . -n "$file")
-    echo $tests_to_insert 
-    # echo $tests_to_insert >> merged-results.xml
-    # Insert the <test> elements after the last <test> element in the merged-results.xml file
-    xmlstarlet ed -L -s "//suite" -t elem -n "temp" -v "$tests_to_insert" merged-results.xml
-    # xmlstarlet ed -L -u "//suite" v "$tests_to_insert" merged-results.xml
-    xmlstarlet fo -s 2 merged-results.xml > mer-results.xml
-    # xmlstarlet fo -t merged-results.xml
-    # xmlstarlet ed -L -m "//test" "//suite" merged-results.xml
-    # xmlstarlet ed -L -d "//temp" merged-results.xml
+    # Extract the <test> elements from each file and append them to the merged-results.xml file
+    xmlstarlet sel -t -m '//test' -c . -n "$file" >> merged-results.xml
+ # Extract the attributes from each file and update the attribute variables
+    ignored=$(xmlstarlet sel -t -v '/testng-results/@ignored' "$file")
+    total=$(xmlstarlet sel -t -v '/testng-results/@total' "$file")
+    passed=$(xmlstarlet sel -t -v '/testng-results/@passed' "$file")
+    failed=$(xmlstarlet sel -t -v '/testng-results/@failed' "$file")
+    skipped=$(xmlstarlet sel -t -v '/testng-results/@skipped' "$file")
 
-    # Extract the attribute values from each file and add them to the totals
-    total_ignored=$((total_ignored + $(xmlstarlet sel -t -v "//testng-results/@ignored" "$file")))
-    total_total=$((total_total + $(xmlstarlet sel -t -v "//testng-results/@total" "$file")))
-    total_passed=$((total_passed + $(xmlstarlet sel -t -v "//testng-results/@passed" "$file")))
-    total_failed=$((total_failed + $(xmlstarlet sel -t -v "//testng-results/@failed" "$file")))
-    total_skipped=$((total_skipped + $(xmlstarlet sel -t -v "//testng-results/@skipped" "$file")))
+    total_ignored=$((total_ignored + ignored))
+    total_total=$((total_total + total))
+    export total_passed=$((total_passed + passed))
+    export total_failed=$((total_failed + failed))
+    total_skipped=$((total_skipped + skipped))
+
   fi
 done
+# Add the attribute values to the root <suite> element
+xmlstarlet ed -L -u '/suite' -v "" -a '/suite' -t attr -n 'ignored' -v "$total_ignored" -a '/suite' -t attr -n 'total' -v "$total_total" -a '/suite' -t attr -n 'passed' -v "$total_passed" -a '/suite' -t attr -n 'failed' -v "$total_failed" -a '/suite' -t attr -n 'skipped' -v "$total_skipped" merged-results.xml
 
 # Close the root element
-# echo '</suite></testng-results>' >> merged-results.xml
+echo '</suite></testng-results>' >> merged-results.xml
 
 echo "TOTAL_IGNORED=$total_ignored" > results.env
 echo "TOTAL_TOTAL=$total_total" >> results.env
