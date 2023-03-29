@@ -31,6 +31,7 @@ for file in $(echo "$files_list" | tail -n +2); do
   if [[ -f "$file" && "$file" == *.xml ]]; then
     # Extract the <test> elements from each file
     tests_to_insert=$(xmlstarlet sel -t -m '//test' -c . -n "$file")
+    echo $tests_to_insert
     # Insert the <test> elements after the last <test> element in the merged-results.xml file
     xmlstarlet ed -L -a "//suite" -t xml -v "$tests_to_insert" merged-results.xml
 
