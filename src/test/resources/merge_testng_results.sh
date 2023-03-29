@@ -36,7 +36,7 @@ for file in $(echo "$files_list" | tail -n +2); do
     # Insert the <test> elements after the last <test> element in the merged-results.xml file
     # xmlstarlet ed -L -s "//suite" -t elem -n "temp" -v "$tests_to_insert" merged-results.xml
     xmlstarlet ed -L -u "//suite" v "$tests_to_insert" merged-results.xml
-    xmlstarlet fo -s 2 merged-results.xml > merged-results.xml
+    xmlstarlet fo -s 2 merged-results.xml > mer-results.xml
     # xmlstarlet fo -t merged-results.xml
     # xmlstarlet ed -L -m "//test" "//suite" merged-results.xml
     # xmlstarlet ed -L -d "//temp" merged-results.xml
