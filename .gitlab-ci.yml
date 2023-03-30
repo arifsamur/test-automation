@@ -76,6 +76,7 @@ merge_test_results:
     - chmod +x src/test/resources/merge_testng_results.sh
     - cd public/
     - $CI_PROJECT_DIR/src/test/resources/merge_testng_results.sh
+    - cd ..
     - mvn io.qameta.allure:allure-maven:report
     - mv target/site/allure-maven-plugin/* public
   artifacts:
