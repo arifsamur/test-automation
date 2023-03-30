@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Create a new XML file with the root element
-echo '<?xml version="1.0" encoding="UTF-8"?><testng-results><suite>' > merged-results.xml
+echo -e '<?xml version="1.0" encoding="UTF-8"?>\n<testng-results>\n<suite>' > merged-results.xml
 
 # Loop through all testng-results_*.xml files in the current directory
 for file in testng-results_*.xml; do
@@ -18,20 +18,47 @@ for file in testng-results_*.xml; do
 
     total_ignored=$((total_ignored + ignored))
     total_total=$((total_total + total))
-    export total_passed=$((total_passed + passed))
-    export total_failed=$((total_failed + failed))
+    total_passed=$((total_passed + passed))
+    total_failed=$((total_failed + failed))
     total_skipped=$((total_skipped + skipped))
 
   fi
 done
 
-xmlstarlet ed -L -u '/suite' -v "" -a '/suite' -t attr -n 'ignored' -v "$total_ignored" -a '/suite' -t attr -n 'total' -v "$total_total" -a '/suite' -t attr -n 'passed' -v "$total_passed" -a '/suite' -t attr -n 'failed' -v "$total_failed" -a '/suite' -t attr -n 'skipped' -v "$total_skipped" merged-results.xml
+# Read the suite's attributes from the first xml file
+first_file=$(find . -name "testng-results_*.xml" | head -n 1)
+suite_started_at=$(xmlstarlet sel -t -v "//suite/@started-at" "$first_file")
+suite_name=$(xmlstarlet sel -t -v "//suite/@name" "$first_file")
+suite_finished_at=$(xmlstarlet sel -t -v "//suite/@finished-at" "$first_file")
+suite_duration_ms=$(xmlstarlet sel -t -v "//suite/@duration-ms" "$first_file")
 
 # Close the root element
-echo '</suite></testng-results>' >> merged-results.xml
+echo -e '</suite>\n</testng-results>' >> merged-results.xml
 
-echo "TOTAL_IGNORED=$total_ignored" > results.env
-echo "TOTAL_TOTAL=$total_total" >> results.env
-echo "TOTAL_PASSED=$total_passed" >> results.env
-echo "TOTAL_FAILED=$total_failed" >> results.env
-echo "TOTAL_SKIPPED=$total_skipped" >> results.env
+xmlstarlet fo -s 2 merged-results.xml > testng-results.xml
+
+# Insert the testng-results element with the extracted attributes in the merged-results.xml file
+xmlstarlet ed -L \
+  -i '//testng-results' -t attr -n 'ignored' -v "$total_ignored" \
+  -i '//testng-results' -t attr -n 'total' -v "$total_total" \
+  -i '//testng-results' -t attr -n 'passed' -v "$total_passed" \
+  -i '//testng-results' -t attr -n 'failed' -v "$total_failed" \
+  -i '//testng-results' -t attr -n 'skipped' -v "$total_skipped" testng-results.xml
+
+#rm merged-results.xml
+
+# Insert the suite element with the extracted attributes in the merged-results.xml file
+xmlstarlet ed -L \
+  -i '//suite' -t attr -n 'started-at' -v "$suite_started_at" \
+  -i '//suite' -t attr -n 'name' -v "$suite_name" \
+  -i '//suite' -t attr -n 'finished-at' -v "$suite_finished_at" \
+  -i '//suite' -t attr -n 'duration-ms' -v "$suite_duration_ms" \
+  testng-results.xml
+
+{
+echo "TOTAL_IGNORED=$total_ignored"
+echo "TOTAL_TOTAL=$total_total"
+echo "TOTAL_PASSED=$total_passed"
+echo "TOTAL_FAILED=$total_failed"
+echo "TOTAL_SKIPPED=$total_skipped"
+} >> results.env
