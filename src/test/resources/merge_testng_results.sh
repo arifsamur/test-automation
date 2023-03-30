@@ -45,7 +45,7 @@ xmlstarlet ed -L \
   -i '//testng-results' -t attr -n 'failed' -v "$total_failed" \
   -i '//testng-results' -t attr -n 'skipped' -v "$total_skipped" testng-results.xml
 
-#rm merged-results.xml
+rm merged-results.xml
 
 # Insert the suite element with the extracted attributes in the merged-results.xml file
 xmlstarlet ed -L \
