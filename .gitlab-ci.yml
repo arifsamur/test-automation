@@ -83,6 +83,7 @@ merge_test_results:
     expire_in: 1 week
     paths:
       - public
+      - target
     when: always
     reports:
       dotenv: public/results.env
