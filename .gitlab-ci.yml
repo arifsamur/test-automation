@@ -27,7 +27,7 @@ variables:
   - curl -v --location --output report.zip --request GET "https://gitlab.com/api/v4/projects/${CI_PROJECT_ID}/jobs/artifacts/develop/download?job=pages&job_token=$CI_JOB_TOKEN" || true
   - (unzip report.zip) || true
   - cd ../
-  - (cp -r backup/public/history/ public/allure-results/history) || true
+  - (cp -r backup/public/history/ target/allure-results/history) || true
 
 .test_definition: &test_definition
   - echo "[Auto-Message] Start UI Test Cases execution"
@@ -38,7 +38,7 @@ variables:
 .collect_reports: &collect_reports
   - mkdir public
   - cp target/surefire-reports/testng-results.xml public/testng-results_suite_$CI_NODE_INDEX.xml
-  - cp -r target/allure-results/ public
+  # - cp -r target/allure-results/ public
 
 cache:
   key: "${CI_COMMIT_REF_SLUG}"
@@ -57,6 +57,7 @@ tests:
     when: always
     paths:
       - public
+      - target/allure-results/
     expire_in: 1 week
     reports:
       junit:
@@ -75,9 +76,6 @@ merge_test_results:
     - chmod +x src/test/resources/merge_testng_results.sh
     - cd public/
     - $CI_PROJECT_DIR/src/test/resources/merge_testng_results.sh
-    - cd ../
-    - ls
-    - pwd
     - mvn allure:report
     - mv target/site/allure-maven-plugin/* public
   artifacts:
