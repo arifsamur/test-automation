@@ -1,4 +1,4 @@
-image: mcr.microsoft.com/playwright:v1.30.0-focal
+image: mcr.microsoft.com/playwright/java
 
 stages:
   - test
@@ -70,8 +70,7 @@ merge_test_results:
   needs: [tests]
   before_script:
     - apt-get update -y && apt-get install -y xmlstarlet
-    - apt-add-repository ppa:qameta/allure -y && apt-get install allure -y
-    - apt-get install software-properties-common -y
+    - apt-get update -y && apt-get install software-properties-common -y
     - apt-add-repository ppa:qameta/allure -y && apt-get install allure -y
     - *download_allure_history
   script:
