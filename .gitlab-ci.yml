@@ -1,4 +1,4 @@
-image: mcr.microsoft.com/playwright/java
+image: mcr.microsoft.com/playwright:v1.30.0-focal
 
 stages:
   - test
@@ -80,7 +80,6 @@ merge_test_results:
     - $CI_PROJECT_DIR/src/test/resources/merge_testng_results.sh
     - cd ../
     - allure generate public/allure-results -o public/allure-report
-
   artifacts:
     expire_in: 1 week
     paths:
