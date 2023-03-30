@@ -70,15 +70,14 @@ merge_test_results:
   needs: [tests]
   before_script:
     - apt-get update -y && apt-get install -y xmlstarlet
-    - apt-get update -y && apt-get install software-properties-common -y
-    - apt-add-repository ppa:qameta/allure -y && apt-get install allure -y
     - *download_allure_history
   script:
     - chmod +x src/test/resources/merge_testng_results.sh
     - cd public/
     - $CI_PROJECT_DIR/src/test/resources/merge_testng_results.sh
     - cd ../
-    - allure generate public/allure-results -o public/allure-report
+    - mvn allure:report
+    - mv target/site/allure-maven-plugin/* public
   artifacts:
     expire_in: 1 week
     paths:
