@@ -22,13 +22,12 @@ variables:
   tags:
     - platform
 
-.generate_allure_report: &generate_allure_report
-  after_script:
-    - mkdir backup && cd backup || true
-    - curl -v --location --output report.zip --request GET "https://gitlab.com/api/v4/projects/${CI_PROJECT_ID}/jobs/artifacts/develop/download?job=pages&job_token=$CI_JOB_TOKEN" || true
-    - (unzip report.zip) || true
-    - cd ../
-    - (cp -r backup/public/history/ public/allure-results/history) || true
+.download_allure_history: &download_allure_history
+  - mkdir backup && cd backup || true
+  - curl -v --location --output report.zip --request GET "https://gitlab.com/api/v4/projects/${CI_PROJECT_ID}/jobs/artifacts/develop/download?job=pages&job_token=$CI_JOB_TOKEN" || true
+  - (unzip report.zip) || true
+  - cd ../
+  - (cp -r backup/public/history/ public/allure-results/history) || true
 
 .test_definition: &test_definition
   - echo "[Auto-Message] Start UI Test Cases execution"
@@ -39,7 +38,7 @@ variables:
 .collect_reports: &collect_reports
   - mkdir public
   - cp target/surefire-reports/testng-results.xml public/testng-results_suite_$CI_NODE_INDEX.xml
-  - cp target/allure-results public
+  - cp -r target/allure-results/ public
 
 cache:
   key: "${CI_COMMIT_REF_SLUG}"
@@ -57,7 +56,6 @@ tests:
   artifacts:
     when: always
     paths:
-      - target/surefire-reports
       - public
     expire_in: 1 week
     reports:
@@ -72,10 +70,12 @@ merge_test_results:
   needs: [tests]
   before_script:
     - apt-get update -y && apt-get install -y xmlstarlet
+    - *download_allure_history
   script:
     - chmod +x src/test/resources/merge_testng_results.sh
     - cd public/
     - $CI_PROJECT_DIR/src/test/resources/merge_testng_results.sh
+    - mvn io.qameta.allure:allure-maven:report
   artifacts:
     expire_in: 1 week
     paths:
@@ -106,7 +106,6 @@ Xray_report:
 pages:
   stage: report
   extends: .platform_job
-
   needs: [merge_test_results]
   script:
     - echo "publish allure report to gitlab pages"
