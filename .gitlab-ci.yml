@@ -71,6 +71,8 @@ merge_test_results:
   before_script:
     - apt-get update -y && apt-get install -y xmlstarlet
     - apt-add-repository ppa:qameta/allure -y && apt-get install allure -y
+    - apt-get install software-properties-common -y
+    - apt-add-repository ppa:qameta/allure -y && apt-get install allure -y
     - *download_allure_history
   script:
     - chmod +x src/test/resources/merge_testng_results.sh
