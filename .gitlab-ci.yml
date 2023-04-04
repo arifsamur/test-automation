@@ -44,7 +44,8 @@ cache:
   key: "${CI_COMMIT_REF_SLUG}"
   paths:
     - .m2/repository
-
+#TODO add cache for allure history
+#TODO optimize Maven dependencies to reduce build time
 tests:
   stage: test
   extends: .platform_job
@@ -64,7 +65,7 @@ tests:
         - $CI_PROJECT_DIR/target/surefire-reports/junitreports/TEST-*.xml
   only:
     - develop
-
+#TODO optimize Maven dependencies to reduce build time
 merge_test_results:
   stage: report
   extends: .platform_job
