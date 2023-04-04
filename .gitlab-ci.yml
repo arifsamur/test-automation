@@ -109,8 +109,6 @@ Xray_report:
     expire_in: 1 week
     paths:
       - public
-  only:
-    - develop
 
 pages:
   stage: report
