@@ -49,7 +49,7 @@ cache:
 tests:
   stage: test
   extends: .platform_job
-  parallel: 2
+  parallel: 4
   script:
     - *test_definition
   after_script:
@@ -88,6 +88,8 @@ merge_test_results:
     when: always
     reports:
       dotenv: public/results.env
+  only:
+    - develop
 
 Xray_report:
   stage: report
@@ -107,6 +109,8 @@ Xray_report:
     expire_in: 1 week
     paths:
       - public
+  only:
+    - develop
 
 pages:
   stage: report
