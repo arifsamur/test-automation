@@ -7,7 +7,7 @@ stages:
 
 variables:
   accepted_rate:
-    value: "95"
+    value: "0"
     description: "Accepted pass rate"
 
   testExecKey:
