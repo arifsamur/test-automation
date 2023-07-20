@@ -11,8 +11,8 @@ import java.util.stream.Collectors;
 
 public class KpiTest extends InitTest {
 
-    private String userName ="arif.samur+surgeon@caresyntax.com";
-    private String password ="Qa2021@1#";
+    private String userName ="mohammed.gesreha@caresyntax.com";
+    private String password ="Gesreha#7107";
 
     @Test(description = "Test Kpi Clinical Alphabetical Sorting")
     @XrayTest(key = "PLATFORM-788")
@@ -55,5 +55,4 @@ public class KpiTest extends InitTest {
         List<String> sortedKpiHeadersList= kpiHeadersList.stream().sorted().collect(Collectors.toList());
         Assert.assertEquals(kpiHeadersList,sortedKpiHeadersList, "Kpis aren't sorted alphabetically as expected");
     }
-
 }
