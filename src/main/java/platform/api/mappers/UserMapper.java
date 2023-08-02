@@ -1,7 +1,7 @@
 package platform.api.mappers;
 
-import platform.api.models.keycloack.User;
-import platform.api.models.keycloack.UserUpdate;
+import platform.api.models.user.User;
+import platform.api.models.user.UserUpdate;
 import platform.data.UserData;
 
 public class UserMapper {

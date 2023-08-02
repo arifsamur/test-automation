@@ -1,4 +1,4 @@
-package platform.api.models.keycloack;
+package platform.api.models.user;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
