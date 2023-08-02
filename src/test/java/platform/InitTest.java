@@ -11,9 +11,12 @@ import platform.utils.PropertiesUtils;
 public class InitTest {
 
     static Playwright playwright;
-    static Browser browser;
+    protected static Browser browser;
     protected Page page;
     protected BrowserContext context;
+
+    protected static String userName = PropertiesUtils.getProperties("test.properties").getProperty("userName");
+    protected static String password = PropertiesUtils.getProperties("test.properties").getProperty("password");
 
     @BeforeSuite
     protected static void launchBrowser(){

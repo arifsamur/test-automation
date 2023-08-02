@@ -25,6 +25,10 @@ public class HomePage {
         casesTableFilterButton = page.getByTestId("toggle-filter-button");
     }
 
+    public boolean isOpened(){
+        return kpiFilterButton.isVisible();
+    }
+
     @Step("Wait KPI Loading")
     public HomePage waitKPILoading() {
         page.waitForLoadState(LoadState.NETWORKIDLE);
@@ -59,8 +63,13 @@ public class HomePage {
         return new PaginationTab(page);
     }
 
-    @Step("Access Table Filter")
+    @Step("Access table filter")
     public CasesTableFilter geCasesTableFilter(){
         return new CasesTableFilter(page);
+    }
+
+    @Step("Access user profile widget")
+    public UserProfile getUserProfileWidget(){
+        return new UserProfile(page);
     }
 }

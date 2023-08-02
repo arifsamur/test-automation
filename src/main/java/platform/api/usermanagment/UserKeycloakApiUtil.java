@@ -4,8 +4,8 @@ import io.restassured.RestAssured;
 import io.restassured.filter.log.ErrorLoggingFilter;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
-import platform.api.models.keycloack.Group;
-import platform.api.models.keycloack.User;
+import platform.api.models.user.Group;
+import platform.api.models.user.User;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -14,20 +14,22 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 public class UserKeycloakApiUtil {
-    private static final String SERVER_URL = "https://identity.dev.happysurgeon.com/auth";
+    private static final String SERVER_URL = "https://identity.dev.happysurgeon.com";
     private static final String REALM = "Platform";
     private static final String CLIENT_ID = "cx-platform-user-management";
     private static final String CLIENT_SECRET = "e6f7f525-b782-4f03-922d-2ee2116afe89";
 
     public static String getAccessToken() {
 //        RequestSpecification requestSpecification = ApiUtils.getRequestSpec();
-        Response tokenResponse = RestAssured.given()
+        Response tokenResponse = RestAssured.given().log().all()
                 .urlEncodingEnabled(true)
                 .param("grant_type", "client_credentials")
                 .param("client_id", CLIENT_ID)
                 .param("client_secret", CLIENT_SECRET)
                 .when()
                 .post(SERVER_URL + "/realms/" + REALM + "/protocol/openid-connect/token");
+
+        tokenResponse.then().log().all();
 
         return tokenResponse.jsonPath().getString("access_token");
     }
@@ -47,8 +49,11 @@ public class UserKeycloakApiUtil {
 
     public static List<User> searchForUsers(String searchQuery) {
         return Arrays.asList(givenAuth()
-                .queryParam("search", searchQuery)
-                .get(SERVER_URL + "/admin/realms/" + REALM + "/users")
+                .queryParam("briefRepresentation","true")
+                .queryParam("first","0")
+                .queryParam("max","11")
+                .queryParam("search", searchQuery).log().all()
+                .get(SERVER_URL + "/admin/realms/" + REALM + "/admin-ui-brute-force-user")
                 .then()
                 .statusCode(200)
                 .extract()
@@ -92,7 +97,7 @@ public class UserKeycloakApiUtil {
 
         // Set the password for the user
         Response response = givenAuth()
-                .body(credentials)
+                .body(credentials).log().all()
                 .put(SERVER_URL + "/admin/realms/" + REALM + "/users/" + userId + "/reset-password")
                 .then()
                 .statusCode(204)
