@@ -9,7 +9,7 @@
     </listeners>
     <test verbose="2" preserve-order="true" name="mockTest">
         <classes>
-            <class name="platform.kpi.mockTest"/>
+            <class name="platform.kpi.UserProfileTest"/>
         </classes>
     </test>
 </suite>
