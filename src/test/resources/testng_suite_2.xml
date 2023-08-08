@@ -7,7 +7,7 @@
     <listeners>
         <listener class-name="app.getxray.xray.testng.listeners.XrayListener" />
     </listeners>
-    <test verbose="2" preserve-order="true" name="mockTest">
+    <test verbose="2" preserve-order="true" name="UserProfile">
         <classes>
             <class name="platform.kpi.UserProfileTest"/>
         </classes>
