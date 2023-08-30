@@ -50,6 +50,7 @@ public class KpiFilter {
     public KpiFilter selectAllClinicalKPIs(){
         selectAllClinicalKPIsButton.click();
         clinicalKpiFilterCheckBoxList.stream().forEach(locator -> assertThat(locator).isChecked());
+
         return this;
     }
 
